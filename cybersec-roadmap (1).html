@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baba Jaga — Cybersecurity Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050a0f;
+    --panel: #0a1520;
+    --border: #0d2137;
+    --cyan: #00e5ff;
+    --green: #00ff88;
+    --orange: #ff6b35;
+    --purple: #9d4edd;
+    --yellow: #ffd60a;
+    --pink: #ff2d87;
+    --text: #c8d8e8;
+    --dim: #4a6580;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+  body::before {
+    content: '';
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,229,255,0.015) 2px, rgba(0,229,255,0.015) 4px);
+    pointer-events: none; z-index: 1000;
+  }
+  body::after {
+    content: '';
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-image: linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none; z-index: 0;
+  }
+  .container { position: relative; z-index: 10; max-width: 1200px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* HEADER */
+  .header { text-align: center; margin-bottom: 60px; }
+  .header-tag { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--pink); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 12px; text-shadow: 0 0 10px rgba(255,45,135,0.5); }
+  .header h1 { font-size: clamp(28px, 5vw, 52px); font-weight: 700; letter-spacing: 3px; text-transform: uppercase; background: linear-gradient(135deg, var(--cyan), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.1; margin-bottom: 8px; }
+  .header-sub { font-family: 'Share Tech Mono', monospace; font-size: 13px; color: var(--dim); letter-spacing: 2px; }
+  .header-line { width: 200px; height: 1px; background: linear-gradient(90deg, transparent, var(--pink), var(--cyan), transparent); margin: 20px auto 16px; }
+
+  /* PROGRESS BAR */
+  .progress-wrap { max-width: 400px; margin: 0 auto 8px; }
+  .progress-label { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--dim); letter-spacing: 2px; display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .progress-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--pink), var(--cyan)); border-radius: 2px; transition: width 0.4s ease; width: 0%; }
+
+  /* PHASE */
+  .phase { margin-bottom: 48px; }
+  .phase-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+  .phase-num { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Share Tech Mono', monospace; font-size: 16px; font-weight: bold; border: 2px solid; flex-shrink: 0; position: relative; }
+  .phase-num::before { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 1px solid; opacity: 0.3; animation: pulse 3s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1);opacity:0.3} 50%{transform:scale(1.15);opacity:0.6} }
+  .phase-label { font-family: 'Share Tech Mono', monospace; font-size: 10px; letter-spacing: 3px; opacity: 0.7; margin-bottom: 4px; }
+  .phase-title { font-size: 22px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  .phase-months { font-family: 'Share Tech Mono', monospace; font-size: 10px; padding: 2px 10px; border-radius: 2px; display: inline-block; margin-top: 4px; letter-spacing: 1px; }
+
+  /* CARDS */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+  .card { background: var(--panel); border: 1px solid var(--border); padding: 18px 20px; position: relative; transition: all 0.25s; clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px)); }
+  .card:hover { transform: translateY(-3px); background: #0d1e2e; }
+  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+  .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+  .card-title { font-size: 15px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; line-height: 1.3; flex: 1; }
+  .badge { font-family: 'Share Tech Mono', monospace; font-size: 9px; padding: 2px 7px; border-radius: 2px; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
+  .free { background: rgba(0,255,136,0.15); color: var(--green); border: 1px solid rgba(0,255,136,0.3); }
+  .paid { background: rgba(255,107,53,0.15); color: var(--orange); border: 1px solid rgba(255,107,53,0.3); }
+  .key  { background: rgba(255,45,135,0.15); color: var(--pink); border: 1px solid rgba(255,45,135,0.3); }
+
+  /* COURSE LINK */
+  .card-link {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--cyan);
+    margin-bottom: 10px; display: inline-flex; align-items: center; gap: 5px;
+    text-decoration: none; opacity: 0.7; transition: opacity 0.2s;
+  }
+  .card-link:hover { opacity: 1; text-decoration: underline; }
+  .card-link::before { content: '↗'; font-size: 11px; }
+
+  /* TOPICS / CHECKBOXES */
+  .topics { display: flex; flex-direction: column; gap: 5px; margin-top: 6px; }
+  .topic {
+    display: flex; align-items: flex-start; gap: 8px; font-size: 13px;
+    color: var(--text); padding: 5px 8px; background: rgba(255,255,255,0.02);
+    border-left: 2px solid var(--border); line-height: 1.35; transition: all 0.15s;
+    cursor: pointer; user-select: none;
+  }
+  .topic:hover { background: rgba(0,229,255,0.04); padding-left: 12px; }
+  .topic.checked { opacity: 0.45; }
+  .topic.checked .topic-text strong { text-decoration: line-through; }
+
+  /* CUSTOM CHECKBOX */
+  .topic-check {
+    width: 14px; height: 14px; border-radius: 2px; border: 1px solid var(--dim);
+    flex-shrink: 0; margin-top: 2px; display: flex; align-items: center;
+    justify-content: center; transition: all 0.2s; background: transparent;
+  }
+  .topic.checked .topic-check { border-color: var(--green); background: rgba(0,255,136,0.2); }
+  .topic.checked .topic-check::after { content: '✓'; font-size: 9px; color: var(--green); font-weight: bold; }
+
+  .topic-text strong { display: block; font-size: 13px; font-weight: 700; }
+  .topic-text span { font-size: 11px; color: var(--dim); font-family: 'Share Tech Mono', monospace; line-height: 1.3; }
+
+  /* WEEKS */
+  .weeks { margin-top: 10px; border-top: 1px solid var(--border); padding-top: 8px; }
+  .weeks-title { font-family: 'Share Tech Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--dim); text-transform: uppercase; margin-bottom: 6px; }
+  .week-row { display: flex; gap: 8px; margin-bottom: 4px; font-size: 12px; align-items: baseline; }
+  .week-label { font-family: 'Share Tech Mono', monospace; font-size: 10px; flex-shrink: 0; color: var(--dim); width: 52px; }
+  .week-task { color: var(--text); line-height: 1.3; }
+
+  /* CONNECTOR */
+  .connector { display: flex; justify-content: center; align-items: center; height: 36px; margin-bottom: 8px; }
+  .connector-inner { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .connector-line { width: 2px; height: 10px; background: linear-gradient(180deg, var(--pink), var(--purple)); opacity: 0.6; }
+  .connector-arrow { font-family: 'Share Tech Mono', monospace; font-size: 16px; color: var(--pink); animation: blink 2s ease-in-out infinite; text-shadow: 0 0 8px rgba(255,45,135,0.6); }
+  @keyframes blink { 0%,100%{opacity:0.4} 50%{opacity:1} }
+
+  /* PHASE COLOR THEMES */
+  .phase-1 .phase-num { border-color: var(--cyan); color: var(--cyan); background: rgba(0,229,255,0.08); }
+  .phase-1 .phase-num::before { border-color: var(--cyan); }
+  .phase-1 .phase-label,.phase-1 .phase-title { color: var(--cyan); }
+  .phase-1 .phase-months { background: rgba(0,229,255,0.1); color: var(--cyan); border: 1px solid rgba(0,229,255,0.3); }
+  .phase-1 .card:hover { border-color: var(--cyan); }
+  .phase-1 .card::before { background: var(--cyan); }
+  .phase-1 .card-title { color: var(--cyan); }
+  .phase-1 .topic:hover { border-left-color: var(--cyan); background: rgba(0,229,255,0.04); }
+  .phase-1 .topic-check { border-color: rgba(0,229,255,0.4); }
+
+  .phase-2 .phase-num { border-color: var(--green); color: var(--green); background: rgba(0,255,136,0.08); }
+  .phase-2 .phase-num::before { border-color: var(--green); animation-delay:0.5s; }
+  .phase-2 .phase-label,.phase-2 .phase-title { color: var(--green); }
+  .phase-2 .phase-months { background: rgba(0,255,136,0.1); color: var(--green); border: 1px solid rgba(0,255,136,0.3); }
+  .phase-2 .card:hover { border-color: var(--green); }
+  .phase-2 .card::before { background: var(--green); }
+  .phase-2 .card-title { color: var(--green); }
+  .phase-2 .topic:hover { border-left-color: var(--green); background: rgba(0,255,136,0.04); }
+  .phase-2 .topic-check { border-color: rgba(0,255,136,0.4); }
+
+  .phase-3 .phase-num { border-color: var(--orange); color: var(--orange); background: rgba(255,107,53,0.08); }
+  .phase-3 .phase-num::before { border-color: var(--orange); animation-delay:1s; }
+  .phase-3 .phase-label,.phase-3 .phase-title { color: var(--orange); }
+  .phase-3 .phase-months { background: rgba(255,107,53,0.1); color: var(--orange); border: 1px solid rgba(255,107,53,0.3); }
+  .phase-3 .card:hover { border-color: var(--orange); }
+  .phase-3 .card::before { background: var(--orange); }
+  .phase-3 .card-title { color: var(--orange); }
+  .phase-3 .topic:hover { border-left-color: var(--orange); background: rgba(255,107,53,0.04); }
+  .phase-3 .topic-check { border-color: rgba(255,107,53,0.4); }
+
+  .phase-4 .phase-num { border-color: var(--purple); color: var(--purple); background: rgba(157,78,221,0.08); }
+  .phase-4 .phase-num::before { border-color: var(--purple); animation-delay:1.5s; }
+  .phase-4 .phase-label,.phase-4 .phase-title { color: var(--purple); }
+  .phase-4 .phase-months { background: rgba(157,78,221,0.1); color: var(--purple); border: 1px solid rgba(157,78,221,0.3); }
+  .phase-4 .card:hover { border-color: var(--purple); }
+  .phase-4 .card::before { background: var(--purple); }
+  .phase-4 .card-title { color: var(--purple); }
+  .phase-4 .topic:hover { border-left-color: var(--purple); background: rgba(157,78,221,0.04); }
+  .phase-4 .topic-check { border-color: rgba(157,78,221,0.4); }
+
+  /* ALWAYS ON */
+  .always-on { margin-top: 48px; padding: 28px 32px; background: var(--panel); border: 1px solid rgba(255,45,135,0.3); position: relative; clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px)); }
+  .always-on::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--pink), var(--purple)); }
+  .always-on-title { font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: 4px; color: var(--pink); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; text-shadow: 0 0 8px rgba(255,45,135,0.4); }
+  .always-on-title::after { content: ''; flex: 1; height: 1px; background: rgba(255,45,135,0.3); }
+  .always-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .always-card { padding: 14px 16px; background: rgba(255,45,135,0.04); border: 1px solid rgba(255,45,135,0.15); transition: all 0.2s; }
+  .always-card:hover { background: rgba(255,45,135,0.08); border-color: rgba(255,45,135,0.4); }
+  .always-card-title { font-size: 14px; font-weight: 700; color: var(--pink); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .always-card .topic { border-left-color: rgba(255,45,135,0.2); }
+  .always-card .topic-check { border-color: rgba(255,45,135,0.4); }
+  .always-card .topic:hover { border-left-color: var(--pink); background: rgba(255,45,135,0.06); }
+
+  /* GOAL */
+  .goal-banner { margin-top: 40px; padding: 32px; background: linear-gradient(135deg, rgba(157,78,221,0.15), rgba(255,45,135,0.1), rgba(0,229,255,0.1)); border: 1px solid rgba(157,78,221,0.4); text-align: center; position: relative; overflow: hidden; }
+  .goal-banner::before { content: 'TARGET'; position: absolute; font-family: 'Share Tech Mono', monospace; font-size: 80px; color: rgba(255,45,135,0.05); top: 50%; left: 50%; transform: translate(-50%,-50%); letter-spacing: 20px; pointer-events: none; }
+  .goal-title { font-family: 'Share Tech Mono', monospace; font-size: 10px; letter-spacing: 5px; color: var(--pink); margin-bottom: 10px; text-shadow: 0 0 8px rgba(255,45,135,0.4); }
+  .goal-text { font-size: 26px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; background: linear-gradient(135deg, var(--pink), var(--purple), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .goal-sub { font-family: 'Share Tech Mono', monospace; font-size: 12px; color: var(--dim); margin-top: 8px; }
+
+  /* FOOTER */
+  .footer { margin-top: 60px; border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .footer-left { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--dim); letter-spacing: 2px; }
+  .footer-left span { color: var(--pink); }
+  .footer-right { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--dim); }
+  .reset-btn {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px; letter-spacing: 2px;
+    padding: 6px 14px; border: 1px solid rgba(255,45,135,0.3); background: transparent;
+    color: var(--pink); cursor: pointer; text-transform: uppercase; transition: all 0.2s;
+  }
+  .reset-btn:hover { background: rgba(255,45,135,0.1); border-color: var(--pink); }
+
+  @media (max-width: 600px) { .cards,.always-grid { grid-template-columns: 1fr; } .footer { flex-direction: column; align-items: flex-start; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-tag">// self_development_roadmap.exe</div>
+    <h1>Cybersecurity<br>Skill Roadmap</h1>
+    <div class="header-sub">Baba Jaga &nbsp;·&nbsp; Blue → Purple Team &nbsp;·&nbsp; 12 Months</div>
+    <div class="header-line"></div>
+    <div class="progress-wrap">
+      <div class="progress-label"><span>// progress</span><span id="progress-text">0 / 0 completed</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="phase phase-1">
+    <div class="phase-header">
+      <div class="phase-num">01</div>
+      <div class="phase-meta">
+        <div class="phase-label">// Phase 01 — Blue Team Core</div>
+        <div class="phase-title">Foundation &amp; SOC Skills</div>
+        <div class="phase-months">Months 01 – 03</div>
+      </div>
+    </div>
+    <div class="cards">
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">TryHackMe — SOC Level 1</div><span class="badge key">YOU HAVE IT</span></div>
+        <a class="card-link" href="https://tryhackme.com/path/outline/soclevel1" target="_blank">tryhackme.com/path/outline/soclevel1</a>
+        <div class="topics">
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>MITRE ATT&CK Framework</strong><span>Tactics · Techniques · Procedures · Diamond Model · Kill Chain</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Cyber Threat Intelligence</strong><span>OpenCTI · MISP · threat feeds · IOC analysis · threat reports</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Network Traffic Analysis</strong><span>Wireshark · Zeek · NetworkMiner · reading PCAPs</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Endpoint Security Monitoring</strong><span>Sysinternals suite · Core Windows processes · Sysmon logs</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>SIEM Fundamentals</strong><span>Splunk · ELK Stack · alert triage · log correlation rules</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Phishing Email Analysis</strong><span>Header analysis · URL detonation · attachment sandbox · IOCs</span></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Cisco — Intro to Cybersecurity</div><span class="badge free">FREE CERT</span></div>
+        <a class="card-link" href="https://www.netacad.com/courses/cybersecurity/introduction-cybersecurity" target="_blank">netacad.com · ~6 hours · instant Cisco certificate</a>
+        <div class="topics">
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Threat Landscape</strong><span>Attack types · threat actors · motives · attack vectors</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>CIA Triad &amp; Core Concepts</strong><span>Confidentiality · Integrity · Availability · risk basics</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Data &amp; Identity Protection</strong><span>Authentication · password policies · MFA · data classification</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Cyber Career Paths</strong><span>Roles overview · cert roadmap · skills employers want</span></div></div>
+        </div>
+        <div class="weeks">
+          <div class="weeks-title">// suggested schedule</div>
+          <div class="week-row"><span class="week-label">Week 1</span><span class="week-task">Complete in one sitting — only 6 hours</span></div>
+          <div class="week-row"><span class="week-label">Week 2</span><span class="week-task">Move immediately to Cybersecurity Essentials</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Cisco — Cybersecurity Essentials</div><span class="badge free">FREE CERT</span></div>
+        <a class="card-link" href="https://www.netacad.com/courses/cybersecurity/cybersecurity-essentials" target="_blank">netacad.com · ~30 hours · solid foundation cert</a>
+        <div class="topics">
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Cryptography</strong><span>Symmetric · Asymmetric · Hashing · PKI · TLS/SSL explained</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Access Control Models</strong><span>DAC · MAC · RBAC · Zero Trust principles · least privilege</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Network Security Basics</strong><span>Firewalls · IDS/IPS · DMZ · VLANs · ACLs · segmentation</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Vulnerability Management</strong><span>CVE · CVSS scoring · scanning · patch management</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Security Operations Intro</strong><span>Log management · SIEM · incident response process overview</span></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Blue Team Labs Online</div><span class="badge free">FREE</span></div>
+        <a class="card-link" href="https://blueteamlabs.online" target="_blank">blueteamlabs.online · practice alongside theory</a>
+        <div class="topics">
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Phishing Analysis Labs</strong><span>Real phishing emails · header parsing · URL/attachment tools</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Log Analysis Challenges</strong><span>Windows Event Logs · Apache logs · failed auth patterns</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Network PCAP Labs</strong><span>Suspicious traffic · C2 beacons · exfiltration detection</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Threat Intel Lookups</strong><span>VirusTotal · AbuseIPDB · Shodan · IOC enrichment</span></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="connector"><div class="connector-inner"><div class="connector-line"></div><div class="connector-arrow">▼</div><div class="connector-line"></div></div></div>
+
+  <!-- PHASE 2 -->
+  <div class="phase phase-2">
+    <div class="phase-header">
+      <div class="phase-num">02</div>
+      <div class="phase-meta">
+        <div class="phase-label">// Phase 02 — Defensive Depth</div>
+        <div class="phase-title">Network Defense &amp; Threat Intel</div>
+        <div class="phase-months">Months 03 – 06</div>
+      </div>
+    </div>
+    <div class="cards">
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">TryHackMe — Cyber Defense Path</div><span class="badge key">YOU HAVE IT</span></div>
+        <a class="card-link" href="https://tryhackme.com/path/outline/blueteam" target="_blank">tryhackme.com/path/outline/blueteam</a>
+        <div class="topics">
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Digital Forensics</strong><span>File system forensics · Autopsy · memory acquisition basics</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Memory Forensics — Volatility</strong><span>Process analysis · network connections · injected code</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Malware Analysis Basics</strong><span>Static analysis · sandbox tools · YARA rules · behavior</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Threat Hunting</strong><span>Hypothesis-driven hunting · Sigma rules · SIEM hunting queries</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>IDS with Snort &amp; Zeek</strong><span>Writing Snort rules · alert tuning · reducing false positives</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Windows Forensics</strong><span>Registry · prefetch · event logs · LNK files · shellbags</span></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Cisco — Network Defense</div><span class="badge free">FREE CERT</span></div>
+        <a class="card-link" href="https://www.netacad.com/courses/cybersecurity/network-defense" target="_blank">netacad.com · ~70 hours · strong technical cert</a>
+        <div class="topics">
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Network Access Control</strong><span>AAA · 802.1X · NAC · endpoint compliance checks</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Firewall Technologies</strong><span>Stateful · NGFW · Zone-based firewall · ACL writing</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>VPN &amp; Encryption in Practice</strong><span>IPsec · SSL/TLS · site-to-site · remote access VPN</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Security Monitoring</strong><span>NetFlow · SIEM correlation · baselining normal behavior</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Incident Response Process</strong><span>Preparation · Detection · Containment · Recovery · Lessons</span></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">IBM SkillsBuild</div><span class="badge free">FREE CERT</span></div>
+        <a class="card-link" href="https://skillsbuild.org/college-students/digital-credentials/cybersecurity" target="_blank">skillsbuild.org · extends your existing IBM cert</a>
+        <div class="topics">
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Cybersecurity Analyst Fundamentals</strong><span>Threat intel · risk frameworks · SOC analyst workflows</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Cloud Security — Google Workspace</strong><span>Cloud IAM · data loss prevention · CASB tools</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Penetration Testing Concepts</strong><span>Recon methods · vulnerability discovery · reporting basics</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>AI-Powered Threats</strong><span>Deepfakes · LLM abuse · AI-generated phishing detection</span></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">CISA Free Training</div><span class="badge free">FREE</span></div>
+        <a class="card-link" href="https://www.cisa.gov/cybersecurity-training-exercises" target="_blank">cisa.gov/cybersecurity-training-exercises</a>
+        <div class="topics">
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Email Security Deep Dive</strong><span>DMARC · SPF · DKIM · advanced phishing defense playbooks</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Vulnerability Scanning Practice</strong><span>Nessus basics · CVE triaging · remediation prioritization</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Ransomware Defense</strong><span>Detection techniques · backup strategies · recovery planning</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Zero Trust Architecture</strong><span>Identity-first · micro-segmentation · continuous verification</span></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="connector"><div class="connector-inner"><div class="connector-line"></div><div class="connector-arrow">▼</div><div class="connector-line"></div></div></div>
+
+  <!-- PHASE 3 -->
+  <div class="phase phase-3">
+    <div class="phase-header">
+      <div class="phase-num">03</div>
+      <div class="phase-meta">
+        <div class="phase-label">// Phase 03 — Going Offensive</div>
+        <div class="phase-title">Pentesting Basics &amp; OSINT</div>
+        <div class="phase-months">Months 06 – 09</div>
+      </div>
+    </div>
+    <div class="cards">
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">TryHackMe — Jr Pentester Path</div><span class="badge key">YOU HAVE IT</span></div>
+        <a class="card-link" href="https://tryhackme.com/path/outline/jrpenetrationtester" target="_blank">tryhackme.com/path/outline/jrpenetrationtester</a>
+        <div class="topics">
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Passive &amp; Active Reconnaissance</strong><span>nmap · gobuster · theHarvester · Shodan · subfinder</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Web App Hacking — OWASP Top 10</strong><span>Burp Suite · SQL injection · XSS · IDOR · broken auth</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Exploitation with Metasploit</strong><span>Module selection · CVE exploitation · reverse shells · payloads</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Privilege Escalation</strong><span>Linux SUID/sudo misconfigs · Windows token abuse · scripts</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Post Exploitation</strong><span>Persistence · lateral movement · credential harvesting</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Pentest Reporting</strong><span>Writing findings · CVSS scoring · remediation recommendations</span></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">PortSwigger Web Security Academy</div><span class="badge free">FREE</span></div>
+        <a class="card-link" href="https://portswigger.net/web-security" target="_blank">portswigger.net/web-security</a>
+        <div class="topics">
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>SQL Injection (all types)</strong><span>In-band · Blind · Time-based · Error-based · Union attacks</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Authentication Vulnerabilities</strong><span>Brute force · credential stuffing · logic flaws · MFA bypass</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>SSRF &amp; XXE</strong><span>Internal network access · file disclosure · cloud metadata</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>XSS — All Variants</strong><span>Reflected · Stored · DOM-based · CSP bypass techniques</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Access Control &amp; IDOR</strong><span>Horizontal · vertical priv esc · insecure direct object refs</span></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Cisco — Ethical Hacker Course</div><span class="badge free">FREE CERT</span></div>
+        <a class="card-link" href="https://www.netacad.com/courses/cybersecurity/ethical-hacker" target="_blank">netacad.com · offensive mindset + Cisco cert</a>
+        <div class="topics">
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Pentest Methodology</strong><span>Scoping · rules of engagement · legal considerations</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Footprinting &amp; Scanning</strong><span>DNS recon · WHOIS · port scanning · OS fingerprinting</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Social Engineering Techniques</strong><span>Phishing simulation · pretexting · vishing · physical</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Network Attack Techniques</strong><span>ARP poisoning · MITM · DNS hijacking · packet sniffing</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Evasion &amp; Obfuscation</strong><span>AV evasion concepts · IDS bypass · log tampering awareness</span></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">OSINT &amp; Cyber Threat Intelligence</div><span class="badge free">FREE</span></div>
+        <a class="card-link" href="https://osintframework.com" target="_blank">osintframework.com · osintme.com · maltego.com/ce</a>
+        <div class="topics">
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>OSINT Framework Methodology</strong><span>People search · domain intel · IP history · social media</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Maltego Community Edition</strong><span>Entity mapping · infrastructure pivoting · relationship graphs</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Dark Web Research — Formal</strong><span>Tor methodology · threat actor monitoring · paste sites</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>SpiderFoot &amp; Recon-ng</strong><span>Automated OSINT · attack surface discovery · exposed services</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>CTI Report Writing</strong><span>Formalizing research · TLP classifications · STIX/TAXII basics</span></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="connector"><div class="connector-inner"><div class="connector-line"></div><div class="connector-arrow">▼</div><div class="connector-line"></div></div></div>
+
+  <!-- PHASE 4 -->
+  <div class="phase phase-4">
+    <div class="phase-header">
+      <div class="phase-num">04</div>
+      <div class="phase-meta">
+        <div class="phase-label">// Phase 04 — Purple Team Target</div>
+        <div class="phase-title">Credential Sprint &amp; Purple Skills</div>
+        <div class="phase-months">Months 09 – 12</div>
+      </div>
+    </div>
+    <div class="cards">
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">TryHackMe — SOC Level 2</div><span class="badge key">YOU HAVE IT</span></div>
+        <a class="card-link" href="https://tryhackme.com/path/outline/soclevel2" target="_blank">tryhackme.com/path/outline/soclevel2</a>
+        <div class="topics">
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Advanced Threat Hunting</strong><span>Custom Sigma rules · threat hypothesis · proactive hunting</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Advanced SIEM — Splunk SPL</strong><span>Complex queries · custom dashboards · alert correlation</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Incident Response Playbooks</strong><span>Building IR procedures · tabletop exercises · post-mortems</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Purple Team Exercises</strong><span>Simulate attacks → test detections → map MITRE coverage gaps</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Threat Intelligence Platform</strong><span>OpenCTI setup · MISP · feeding IOCs into your SIEM</span></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">CompTIA Security+ Prep</div><span class="badge free">FREE PREP</span></div>
+        <a class="card-link" href="https://www.professormesser.com/security-plus/sy0-701/sy0-701-video/sy0-701-comptia-security-plus-course/" target="_blank">professormesser.com · full free video course</a>
+        <div class="topics">
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Threats, Attacks &amp; Vulnerabilities</strong><span>Malware taxonomy · social engineering · zero-days</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Architecture &amp; Design</strong><span>Cloud security · virtualization · secure network design</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Implementation</strong><span>PKI · wireless security · identity management · hardening</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Governance, Risk &amp; Compliance</strong><span>Policies · GDPR · risk assessment · privacy regulations</span></div></div>
+        </div>
+        <div class="weeks">
+          <div class="weeks-title">// saving plan for exam</div>
+          <div class="week-row"><span class="week-label">Now</span><span class="week-task">Save ~30€/month → ~360€ by month 12</span></div>
+          <div class="week-row"><span class="week-label">Mo. 9</span><span class="week-task">Start Professor Messer video series</span></div>
+          <div class="week-row"><span class="week-label">Mo. 11</span><span class="week-task">Practice exams · identify weak domains</span></div>
+          <div class="week-row"><span class="week-label">Mo. 12</span><span class="week-task">Book and sit the exam</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Cisco — CyberOps Associate Prep</div><span class="badge free">FREE CERT</span></div>
+        <a class="card-link" href="https://www.netacad.com/courses/cybersecurity/cyberops-associate" target="_blank">netacad.com · ~70 hours · SOC-analyst focused</a>
+        <div class="topics">
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Security Monitoring Operations</strong><span>NSM · data collection pipelines · alert triage workflows</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Host-Based Analysis</strong><span>Windows/Linux artifacts · process monitoring · log sources</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Network Intrusion Analysis</strong><span>Attack signatures · protocol anomalies · IDS rule tuning</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Security Policies &amp; Compliance</strong><span>Compliance frameworks · risk management · documentation</span></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">BTL1 — Blue Team Level 1</div><span class="badge paid">WATCH FOR SALES ~$50</span></div>
+        <a class="card-link" href="https://securityblue.team/why-btl1/" target="_blank">securityblue.team · 24h practical exam · no MCQ</a>
+        <div class="topics">
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Phishing Analysis (exam domain)</strong><span>Full investigation methodology · real artifacts · reporting</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Threat Intelligence (exam domain)</strong><span>IOC extraction · actor profiling · intelligence reports</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Digital Forensics (exam domain)</strong><span>Evidence acquisition · artifact analysis · timeline creation</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>SIEM Investigation (exam domain)</strong><span>Splunk queries · alert investigation · incident write-up</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Why this cert matters</strong><span>Validates EXACTLY what you already do at work daily</span></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ALWAYS ON -->
+  <div class="always-on">
+    <div class="always-on-title">⚡ Running throughout all 12 months</div>
+    <div class="always-grid">
+      <div class="always-card">
+        <div class="always-card-title">📁 Portfolio Building</div>
+        <div class="topics">
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Document every work incident</strong><span>Screenshots · timeline · what you found and blocked</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Write TryHackMe room writeups</strong><span>Publish on <a href="https://hashnode.com" target="_blank" style="color:var(--pink)">hashnode.com</a> or <a href="https://github.com" target="_blank" style="color:var(--pink)">GitHub</a></span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Track all certs on LinkedIn</strong><span>TryHackMe public profile · Credly for Cisco badges</span></div></div>
+        </div>
+      </div>
+      <div class="always-card">
+        <div class="always-card-title">🧪 Home Lab — Parrot OS</div>
+        <div class="topics">
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Practice every new tool</strong><span>Wireshark · nmap · Burp Suite · Metasploit · Volatility</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Vulnerable VMs for practice</strong><span><a href="https://dvwa.co.uk" target="_blank" style="color:var(--pink)">DVWA</a> · Metasploitable · <a href="https://www.vulnhub.com" target="_blank" style="color:var(--pink)">VulnHub</a> · HTB free tier</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Recreate real incidents</strong><span>Simulate the phishing attacks you investigate at work</span></div></div>
+        </div>
+      </div>
+      <div class="always-card">
+        <div class="always-card-title">🔍 OSINT &amp; Threat Intel</div>
+        <div class="topics">
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Weekly threat intel reading</strong><span><a href="https://krebsonsecurity.com" target="_blank" style="color:var(--pink)">Krebs on Security</a> · CISA advisories · RF blog</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Monitor your org's exposure</strong><span><a href="https://haveibeenpwned.com" target="_blank" style="color:var(--pink)">HaveIBeenPwned</a> · Shodan · Google Alerts</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Formalize dark web research</strong><span>CTI methodology · STIX format · write intel reports</span></div></div>
+        </div>
+      </div>
+      <div class="always-card">
+        <div class="always-card-title">🌐 Community &amp; CTFs</div>
+        <div class="topics">
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Follow practitioners</strong><span>@MalwareJake · @SwiftOnSecurity · @hacks4pancakes</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>Reddit communities</strong><span><a href="https://reddit.com/r/netsec" target="_blank" style="color:var(--pink)">r/netsec</a> · <a href="https://reddit.com/r/blueteamsec" target="_blank" style="color:var(--pink)">r/blueteamsec</a> · r/cybersecurity</span></div></div>
+          <div class="topic" onclick="toggle(this)"><div class="topic-check"></div><div class="topic-text"><strong>CTF competitions — free entry</strong><span><a href="https://picoctf.org" target="_blank" style="color:var(--pink)">picoCTF</a> · <a href="https://ctftime.org" target="_blank" style="color:var(--pink)">CTFtime.org</a> · HTB seasonal</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOAL -->
+  <div class="goal-banner">
+    <div class="goal-title">// end_state.target</div>
+    <div class="goal-text">Purple Team Analyst</div>
+    <div class="goal-sub">Cisco free certs · TryHackMe SOC paths · PortSwigger · OSINT/CTI · BTL1 · CompTIA Security+</div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-left">// <span>Baba Jaga</span> &nbsp;·&nbsp; Cybersecurity Roadmap &nbsp;·&nbsp; 2025–2026</div>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div class="footer-right" id="footer-progress">0 topics completed</div>
+      <button class="reset-btn" onclick="resetAll()">↺ Reset progress</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Load saved progress from localStorage
+  window.addEventListener('DOMContentLoaded', () => {
+    const saved = JSON.parse(localStorage.getItem('roadmap-progress') || '{}');
+    document.querySelectorAll('.topic').forEach((el, i) => {
+      if (saved[i]) el.classList.add('checked');
+    });
+    updateProgress();
+  });
+
+  function toggle(el) {
+    el.classList.toggle('checked');
+    saveProgress();
+    updateProgress();
+  }
+
+  function saveProgress() {
+    const state = {};
+    document.querySelectorAll('.topic').forEach((el, i) => {
+      state[i] = el.classList.contains('checked');
+    });
+    localStorage.setItem('roadmap-progress', JSON.stringify(state));
+  }
+
+  function updateProgress() {
+    const all = document.querySelectorAll('.topic').length;
+    const done = document.querySelectorAll('.topic.checked').length;
+    const pct = all ? Math.round((done / all) * 100) : 0;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-text').textContent = done + ' / ' + all + ' completed';
+    document.getElementById('footer-progress').textContent = done + ' topics completed';
+  }
+
+  function resetAll() {
+    if (!confirm('Reset all progress?')) return;
+    document.querySelectorAll('.topic').forEach(el => el.classList.remove('checked'));
+    localStorage.removeItem('roadmap-progress');
+    updateProgress();
+  }
+</script>
+</body>
+</html>
